@@ -1,19 +1,16 @@
-# import libraries
 import time
-import RPi.GPIO as GPIO
+from machine import ADC, Pin
 
-# GPIO setup -- pin 29 as moisture sensor input
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(29, GPIO.IN)
+# Set up ADC for the moisture sensor (e.g., connected to ADC pin 28)
+moisture_sensor = ADC(Pin(26))
 
 try:
     while True:
-        if (GPIO.input(29)) == 0:
-            print('Wet')
-        elif (GPIO.input(29)) == 1:
-            print('Dry')
-        time.sleep(.25)
+        # Read the analog value from the sensor
+        sensor_value = (moisture_sensor.read_u16() / 65535.0) * 100
+        print(sensor_value)
+        time.sleep(0.25)
 
-finally:
-    # cleanup the GPIO pins before ending
-    GPIO.cleanup()
+except KeyboardInterrupt:
+    # Exit the loop cleanly when interrupted
+    print("Program stopped")
