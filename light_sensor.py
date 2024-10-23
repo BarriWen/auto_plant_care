@@ -1,8 +1,8 @@
 import machine
 import time
 
-# Initialize the ADC pin where the light sensor is connected (GP26 = ADC0)
-light_sensor = machine.ADC(27)  # ADC0 is on GP26
+# Initialize the ADC pin where the light sensor is connected (GP27 = ADC1)
+light_sensor = machine.ADC(27)  # ADC1 is on GP27
 
 while True:
     # Read the raw value (between 0 and 65535) from the light sensor
