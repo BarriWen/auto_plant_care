@@ -3,3 +3,6 @@ opencv-python
 torchvision
 Pillow
 picozero
+pandas
+numpy
+requests
