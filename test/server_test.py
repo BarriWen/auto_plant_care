@@ -29,15 +29,28 @@ try:
 
             print(f"Received: {data} from {addr}")
 
-            # Respond based on the received command
-            if data == "temp":
-                response = "25.6"  # Simulated temperature
-            elif data == "light":
-                response = "350"  # Simulated light level
-            elif data == "moisture":
-                response = "60.5"  # Simulated moisture level
+            # Parse the received data
+            # Split into two parts: sensor type and value
+            parts = data.split(" ", 1)
+            if len(parts) == 2:
+                sensor_type, value = parts
+                try:
+                    value = float(value)  # Convert the value to a float
+                except ValueError:
+                    conn.sendall(b"Invalid value\n")
+                    continue
+
+                # Respond based on the sensor type
+                if sensor_type == "temp":
+                    response = f"Temperature received: {value}°C"
+                elif sensor_type == "light":
+                    response = f"Light level received: {value} lux"
+                elif sensor_type == "moisture":
+                    response = f"Moisture level received: {value}%"
+                else:
+                    response = "Invalid sensor type"
             else:
-                response = "Invalid command"
+                response = "Invalid command format. Expected format: <sensor_type> <value>"
 
             # Send the response back to the client
             conn.sendall(response.encode('utf-8'))
