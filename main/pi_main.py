@@ -18,6 +18,7 @@ temperature = 0
 humidity = 0
 light_level = 0
 
+# plant type
 results = plant_classifier.detect_and_classify()
 if results:
     print("Detections:", results)
