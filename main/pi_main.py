@@ -50,6 +50,22 @@ try:
                     conn.sendall(b"Invalid value\n")
                     continue
 
+                #  Get the plant type
+                plant_type = ""
+
+                # Plant care instruction logic
+                """
+                    Golden:
+                        temperature: 15-29 °C
+                        humidity: 50-60 %
+                        light: 5000-15000 lux
+
+                    Ribbon:
+                        temperature: 21-32 °C
+                        humdity: 40-60%
+                        light: 10000-20000 lux
+                """
+
                 # Respond based on the sensor type
                 if sensor_type == "temp":
                     temperature = value
@@ -67,7 +83,7 @@ try:
 
             # Send the response back to the client
             conn.sendall(response.encode('utf-8'))
-            
+
             # Button controls (implement functionality as needed)
             if screen.displayhatmini.read_button(screen.displayhatmini.BUTTON_A):
                 screen.display_BUTTON_A(temperature, humidity, light_level, 1)
@@ -79,12 +95,11 @@ try:
                 pass
             else:
                 screen.display_BUTTON_A(temperature, humidity, light_level, 1)
-            
-            
+
+
 except KeyboardInterrupt:
     print("Shutting down server.")
 finally:
     for client in clients:
         client.close()
     server_socket.close()
-
