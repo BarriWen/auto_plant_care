@@ -1,5 +1,4 @@
 import machine
-import utime
 from machine import I2C, Pin
 from lcd1602 import LCD1602
 from dht20 import DHT20
@@ -58,7 +57,7 @@ try:
         data = client_socket.recv(1024).decode('utf-8')
         print(f"Received from server: {data}")
 
-        time.sleep(5)  # Send the next command after a delay
+        # time.sleep(5)
 except KeyboardInterrupt:
     print("Disconnecting...")
 finally:

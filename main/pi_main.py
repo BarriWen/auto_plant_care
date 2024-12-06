@@ -1,8 +1,4 @@
 from Class.screen.minihat import Minihat
-from Class.sensors.light import Light
-from Class.sensors.moisture import Moisture
-from Class.sensors.temp import Temp
-import time
 import socket
 
 screen = Minihat()
@@ -85,19 +81,4 @@ finally:
     for client in clients:
         client.close()
     server_socket.close()
-
-
-
-
-
-
-
-
-
-
-while True:
-    
-    temperature = temp_sensor.get_read()
-    humidity = moisture_sensor.get_read()
-    light_level = light_sensor.get_read()
 
