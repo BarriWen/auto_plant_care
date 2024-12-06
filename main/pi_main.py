@@ -1,7 +1,9 @@
 from Class.screen.minihat import Minihat
+from Class.camera import camera
 import socket
 
 screen = Minihat()
+plant_classifier = camera.PlantClassifier()
 
 HOST = '0.0.0.0'
 PORT = 65432
@@ -15,6 +17,10 @@ clients = []
 temperature = 0
 humidity = 0
 light_level = 0
+
+results = plant_classifier.detect_and_classify()
+if results:
+    print("Detections:", results)
 
 try:
     while True:

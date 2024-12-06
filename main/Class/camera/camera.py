@@ -2,12 +2,12 @@ import torch
 import cv2
 from torchvision import models, transforms
 from PIL import Image
-from picamera2 import Picamera2, Preview
+from picamera2 import Picamera2
 
 class PlantClassifier:
-    def __init__(self, detection_model_path='ultralytics/yolov5', classification_model_path='fine_tuned_mobilenetv2.pth'):
+    def __init__(self, detection_model_path='./yolov5', classification_model_path='fine_tuned_mobilenetv2.pth'):
         # Load YOLOv5 for object detection
-        self.yolo_model = torch.hub.load(detection_model_path, 'yolov5s')
+        self.yolo_model = torch.hub.load(detection_model_path, 'custom', path='yolov5s.pt', source='local', force_reload=True)
         
         # Load MobileNetV2 for classification
         self.classification_model = models.mobilenet_v2(pretrained=False)
@@ -29,59 +29,57 @@ class PlantClassifier:
 
         # Initialize Picamera2
         self.picam2 = Picamera2()
-        config = self.picam2.create_preview_configuration(main={"size": (1280, 720)})
+        config = self.picam2.create_preview_configuration(main={"size": (640, 360)})
         self.picam2.configure(config)
-        self.picam2.start_preview(Preview.QTGL)  # Optional preview
         self.picam2.start()
 
     def detect_and_classify(self):
-        # Capture a frame from the camera
-        frame = self.picam2.capture_array()
-        frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+        try:
+            while True:
+                # Capture a frame from the camera
+                frame = self.picam2.capture_array()
+                # cv2.imshow("preview", frame)
+                frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
-        # Run YOLOv5 inference on the frame
-        detection_results = self.yolo_model(frame_bgr)
+                # Run YOLOv5 inference on the frame
+                detection_results = self.yolo_model(frame_bgr)
 
-        # Extract labels from detection results
-        labels = detection_results.names
-        detections = detection_results.xyxy[0]
-        results = []
+                # Extract the labels (object categories) from the YOLOv5 detection results
+                labels = detection_results.names
+                detections = detection_results.xyxy[0]
 
-        # Loop through detections
-        for detection in detections:
-            class_id = int(detection[5])  # Class index
-            if labels[class_id] == "potted plant":
-                x1, y1, x2, y2 = map(int, detection[:4])  # Bounding box
-                cropped_img = frame_bgr[y1:y2, x1:x2]
+                # Loop through all detections and filter for 'potted plant'
+                for i, detection in enumerate(detections):
+                    class_id = int(detection[5])  # Class index is at position 5 for YOLOv5
+                    if labels[class_id] == "potted plant":
+                        # Get the bounding box coordinates for the potted plant
+                        x1, y1, x2, y2 = map(int, detection[:4])
+                        
+                        # Crop the potted plant region from the frame
+                        cropped_img = frame_bgr[y1:y2, x1:x2]
 
-                # Convert cropped image for classification
-                pil_img = Image.fromarray(cv2.cvtColor(cropped_img, cv2.COLOR_BGR2RGB))
-                input_tensor = self.preprocess(pil_img).unsqueeze(0)  # Add batch dimension
+                        # Convert the cropped image to PIL format for classification
+                        pil_img = Image.fromarray(cv2.cvtColor(cropped_img, cv2.COLOR_BGR2RGB))
 
-                # Perform classification
-                with torch.no_grad():
-                    output = self.classification_model(input_tensor)
-                _, predicted = torch.max(output, 1)
-                predicted_label = self.finetuned_labels[predicted.item()]
+                        # Preprocess the image for MobileNetV2
+                        input_tensor = self.preprocess(pil_img).unsqueeze(0)  # Add batch dimension
 
-                # Append results
-                results.append({
-                    "bounding_box": (x1, y1, x2, y2),
-                    "label": predicted_label
-                })
+                        # Perform classification
+                        with torch.no_grad():
+                            output = self.classification_model(input_tensor)
+                        
+                        # Get the predicted class label from the output
+                        _, predicted = torch.max(output, 1)
+                        predicted_label = self.finetuned_labels[predicted.item()]
+                        return predicted_label
 
-                # Draw results on the frame
-                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                cv2.putText(frame, predicted_label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
-
-                # Display the frame
+                # Display the frame (with or without detection overlay)
                 cv2.imshow('YOLO Object Detection and Classification', frame)
-                return results  # Return results immediately after detection
 
-        # Display the frame without detection
-        cv2.imshow('YOLO Object Detection and Classification', frame)
-        return None
+                # Break the loop if 'q' is pressed
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    return None
+        finally:
+            self.picam2.stop()
+            cv2.destroyAllWindows()
 
-    def stop(self):
-        self.picam2.stop()
-        cv2.destroyAllWindows()
