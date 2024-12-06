@@ -2,7 +2,7 @@ import torch
 import cv2
 from torchvision import models, transforms
 from PIL import Image
-from picamera2 import Picamera2, Preview
+from picamera2 import Picamera2
 
 # Load a pre-trained YOLOv5 model for object detection
 yolo_model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
@@ -28,15 +28,15 @@ preprocess = transforms.Compose([
 ])
 
 picam2 = Picamera2()
-config = picam2.create_preview_configuration(main={"size": (1280, 720)})
+config = picam2.create_video_configuration(main={"size": (1280, 720)})
 picam2.configure(config)
-picam2.start_preview(Preview.NULL) ### PREVIEW: OPTIONAL ###
 picam2.start()
 
 try:
     while True:
         # Capture a frame from the camera
         frame = picam2.capture_array()
+        # cv2.imshow("preview", frame)
         frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
         # Run YOLOv5 inference on the frame

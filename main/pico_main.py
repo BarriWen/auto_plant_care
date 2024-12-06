@@ -7,11 +7,11 @@ import network
 import time
 
 # Wi-Fi credentials
-SSID = 'hhhh'
+SSID = 'hello'
 PASSWORD = ''
 
 # Server details
-SERVER_IP = '192.168.x.x'  # Replace with the Raspberry Pi's IP address
+SERVER_IP = '10.42.0.1'  # Replace with the Raspberry Pi's IP address
 PORT = 65432
 
 # Connect to Wi-Fi
