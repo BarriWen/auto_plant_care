@@ -39,8 +39,23 @@ class Minihat:
 
         self.displayhatmini.display()
 
-    def display_BUTTON_B(self):
-        pass
+    def display_BUTTON_B(self, temperature_warning_msg, humidity_warning_msg, light_warning_msg):
+        # Clear the screen with a dark background
+        self.draw.rectangle([0, 0, self.width, self.height], fill=(10, 10, 10))
+
+        padding = 10
+        line_height = 30
+
+        temperature_warning_msg = "Temperature:" + temperature_warning_msg
+        humidity_warning_msg = "Humidity:" + humidity_warning_msg
+        light_warning_msg = "Light:" + light_warning_msg
+        
+        self.draw.text((self.width // 2 - 90, padding), "Warning messages", fill=(255, 255, 255), font=self.font)
+        self.draw.text((10, padding + line_height), temperature_warning_msg, fill=(255, 255, 255), font=self.font)
+        self.draw.text((10, padding + 2 * line_height), humidity_warning_msg, fill=(255, 255, 255), font=self.font)
+        self.draw.text((10, padding + 3 * line_height), light_warning_msg, fill=(255, 255, 255), font=self.font)
+
+        self.displayhatmini.display()
 
     def display_BUTTON_X(self):
         pass
