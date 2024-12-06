@@ -70,47 +70,47 @@ try:
                 response = "Invalid command format. Expected format: <sensor_type> <value>"
             
             # Plant care instruction logic
-                """
-                    Golden:
-                        temperature: 15-29 °C
-                        humidity: 50-60 %
-                        light: 5000-15000 lux
+            """
+                Golden:
+                    temperature: 15-29 °C
+                    humidity: 50-60 %
+                    light: 5000-15000 lux
 
-                    Ribbon:
-                        temperature: 21-32 °C
-                        humdity: 40-60%
-                        light: 10000-20000 lux
-                """
-                tmpmsg = "No warnings"
-                hmdmsg = "No warnings"
-                ligmsg = "No warnings"
-                if plant_type == "Golden":
-                    if temperature < 15:
-                        tmpmsg = 'Environmeent temperature too low'
-                    if temperature > 29:
-                        tmpmsg = 'Environmeent temperature too high'
-                    if humidity < 0.5:
-                        ligmsg = 'Low environmental humidity'
-                    if humidity > 0.6:
-                        ligmsg = 'High environmental humidity'
-                    if light_level < 5000:
-                        ligmsg = 'Excessive environmental light'
-                    if light_level > 15000:
-                        ligmsg = 'Low environmental light'
+                Ribbon:
+                    temperature: 21-32 °C
+                    humdity: 40-60%
+                    light: 10000-20000 lux
+            """
+            tmpmsg = "No warnings"
+            hmdmsg = "No warnings"
+            ligmsg = "No warnings"
+            if plant_type == "Golden":
+                if temperature < 15:
+                    tmpmsg = 'Environmeent temperature too low'
+                if temperature > 29:
+                    tmpmsg = 'Environmeent temperature too high'
+                if humidity < 0.5:
+                    ligmsg = 'Low environmental humidity'
+                if humidity > 0.6:
+                    ligmsg = 'High environmental humidity'
+                if light_level < 5000:
+                    ligmsg = 'Excessive environmental light'
+                if light_level > 15000:
+                    ligmsg = 'Low environmental light'
 
-                if plant_type == "Ribbon":
-                    if temperature < 21:
-                        tmpmsg = 'Environmeent temperature too low'
-                    if temperature > 29:
-                        tmpmsg = 'Environmeent temperature too high'
-                    if humidity < 0.4:
-                        hmdmsg = 'Low environmental humidity'
-                    if humidity > 0.6:
-                        hmdmsg = 'High environmental humidity'
-                    if light_level < 10000:
-                        ligmsg = 'Excessive environmental light'
-                    if light_level > 20000:
-                        ligmsg = 'Low environmental light'
+            if plant_type == "Ribbon":
+                if temperature < 21:
+                    tmpmsg = 'Environmeent temperature too low'
+                if temperature > 29:
+                    tmpmsg = 'Environmeent temperature too high'
+                if humidity < 0.4:
+                    hmdmsg = 'Low environmental humidity'
+                if humidity > 0.6:
+                    hmdmsg = 'High environmental humidity'
+                if light_level < 10000:
+                    ligmsg = 'Excessive environmental light'
+                if light_level > 20000:
+                    ligmsg = 'Low environmental light'
 
             # Send the response back to the client
             conn.sendall(response.encode('utf-8'))
@@ -119,7 +119,7 @@ try:
             if screen.displayhatmini.read_button(screen.displayhatmini.BUTTON_A):
                 screen.display_BUTTON_A(temperature, humidity, light_level, 1)
             elif screen.displayhatmini.read_button(screen.displayhatmini.BUTTON_B):
-                screen.display_BUTTON_A(tmpmsg, hmdmsg, ligmsg, 1)
+                screen.display_BUTTON_B(tmpmsg, hmdmsg, ligmsg)
             elif screen.displayhatmini.read_button(screen.displayhatmini.BUTTON_X):
                 pass
             elif screen.displayhatmini.read_button(screen.displayhatmini.BUTTON_Y):
