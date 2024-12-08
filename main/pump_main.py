@@ -1,4 +1,5 @@
 import machine
+from machine import Pin
 import socket
 import network
 import time
@@ -37,6 +38,7 @@ try:
             time.sleep(3)
             # pump off
             relay_pin = Pin(18, Pin.IN)
+            data = ""
 
 except KeyboardInterrupt:
     print("Disconnecting...")
