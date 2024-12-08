@@ -68,7 +68,7 @@ try:
                     response = "Invalid sensor type"
             else:
                 response = "Invalid command format. Expected format: <sensor_type> <value>"
-            
+
             # Plant care instruction logic
             """
                 Golden:
@@ -105,6 +105,7 @@ try:
                     tmpmsg = 'Environmeent temperature too high'
                 if humidity < 0.4:
                     hmdmsg = 'Low environmental humidity'
+                    conn.sendall(hmdmsg.encode('utf-8'))
                 if humidity > 0.6:
                     hmdmsg = 'High environmental humidity'
                 if light_level < 10000:
