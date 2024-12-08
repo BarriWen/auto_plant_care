@@ -15,7 +15,8 @@ humidity = 0
 light_level = 0
 
 # Plant type
-results = plant_classifier.detect_and_classify()
+# results = plant_classifier.detect_and_classify()
+results = "golden"
 if results:
     print("Detections:", results)
 
@@ -23,7 +24,7 @@ if results:
 
 
 def handle_client(conn, addr):
-    global temperature, humidity, light_level
+    global temperature, humidity, light_level, plant_type
     print(f"Connected by {addr}")
     try:
         while True:
@@ -58,6 +59,8 @@ def handle_client(conn, addr):
                 elif sensor_type == "moisture":
                     humidity = value
                     response = f"Moisture level received: {value}%"
+                elif sensor_type == "pump":
+                    response = "pump received"
                 else:
                     response = "Invalid sensor type"
             else:
@@ -68,13 +71,15 @@ def handle_client(conn, addr):
             hmdmsg = "No warnings"
             ligmsg = "No warnings"
 
-            if plant_type == "Golden":
+            if plant_type == "golden":
                 if temperature < 15:
                     tmpmsg = 'Environment temperature too low'
                 if temperature > 29:
                     tmpmsg = 'Environment temperature too high'
                 if humidity < 50:
                     hmdmsg = 'Low environmental humidity'
+                    print("low water")
+                    conn.sendall(hmdmsg.encode('utf-8'))
                 if humidity > 60:
                     hmdmsg = 'High environmental humidity'
                 if light_level < 5000:
@@ -82,13 +87,15 @@ def handle_client(conn, addr):
                 if light_level > 15000:
                     ligmsg = 'Low environmental light'
 
-            if plant_type == "Ribbon":
+            if plant_type == "ribbon":
                 if temperature < 21:
                     tmpmsg = 'Environment temperature too low'
                 if temperature > 29:
                     tmpmsg = 'Environment temperature too high'
                 if humidity < 40:
                     hmdmsg = 'Low environmental humidity'
+                    print("low water")
+                    conn.sendall(hmdmsg.encode('utf-8'))
                 if humidity > 60:
                     hmdmsg = 'High environmental humidity'
                 if light_level < 10000:
@@ -128,6 +135,7 @@ def main():
             client_thread.start()
     except KeyboardInterrupt:
         print("Shutting down server.")
+        server_socket.close()
     finally:
         server_socket.close()
 
