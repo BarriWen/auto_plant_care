@@ -29,9 +29,13 @@ print(f"Connected to server at {SERVER_IP}:{PORT}")
 
 try:
     while True:
-
+        haha = "pump"
+        client_socket.sendall(haha.encode('utf-8'))
+        time.sleep(5)
+        print("1")
         # Receive pump instruction from the server
         data = client_socket.recv(1024).decode('utf-8')
+        print("?")
         if data == "Low environmental humidity":
             # pump on
             relay_pin = Pin(18, Pin.OUT)
