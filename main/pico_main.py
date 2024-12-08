@@ -44,20 +44,28 @@ try:
         
         # Send temp to the server
         client_socket.sendall(b"temp " + str(temp_value).encode('utf-8'))
+        print(1)
         data = client_socket.recv(1024).decode('utf-8')
         print(f"Received from server: {data}")
+        
+        time.sleep(5)
         
         # Send light to the server
         client_socket.sendall(b"light " + str(light_value).encode('utf-8'))
+        print(2)
         data = client_socket.recv(1024).decode('utf-8')
         print(f"Received from server: {data}")
         
+        time.sleep(5)
+        
         # Send moisture to the server
         client_socket.sendall(b"moisture " + str(moisture_value).encode('utf-8'))
+        print(3)
         data = client_socket.recv(1024).decode('utf-8')
         print(f"Received from server: {data}")
+        
+        time.sleep(5)
 
-        # time.sleep(5)
 except KeyboardInterrupt:
     print("Disconnecting...")
 finally:
