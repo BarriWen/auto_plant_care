@@ -1,6 +1,7 @@
 from Class.screen.minihat import Minihat
 from Class.camera import camera
 import socket
+import time
 
 screen = Minihat()
 plant_classifier = camera.PlantClassifier()
@@ -19,7 +20,8 @@ humidity = 0
 light_level = 0
 
 # plant type
-results = plant_classifier.detect_and_classify()
+# results = plant_classifier.detect_and_classify()
+results = "golden"
 if results:
     print("Detections:", results)
 
@@ -69,6 +71,9 @@ try:
             else:
                 response = "Invalid command format. Expected format: <sensor_type> <value>"
 
+            # Send the response back to the client
+            conn.sendall(response.encode('utf-8'))
+
             # Plant care instruction logic
             """
                 Golden:
@@ -84,21 +89,24 @@ try:
             tmpmsg = "No warnings"
             hmdmsg = "No warnings"
             ligmsg = "No warnings"
-            if plant_type == "Golden":
+            if plant_type == "golden":
+                print("gggg")
                 if temperature < 15:
                     tmpmsg = 'Environmeent temperature too low'
-                if temperature > 29:
+                elif temperature > 29:
                     tmpmsg = 'Environmeent temperature too high'
-                if humidity < 0.5:
-                    ligmsg = 'Low environmental humidity'
-                if humidity > 0.6:
-                    ligmsg = 'High environmental humidity'
+                if humidity < 50.00:
+                    hmdmsg = 'Low environmental humidity'
+                    print("low water")
+                    conn.sendall(hmdmsg.encode('utf-8'))
+                elif humidity > 60.00:
+                    hmdmsg = 'High environmental humidity'
                 if light_level < 5000:
                     ligmsg = 'Excessive environmental light'
-                if light_level > 15000:
+                elif light_level > 15000:
                     ligmsg = 'Low environmental light'
 
-            if plant_type == "Ribbon":
+            elif plant_type == "ribbon":
                 if temperature < 21:
                     tmpmsg = 'Environmeent temperature too low'
                 if temperature > 29:
@@ -113,8 +121,6 @@ try:
                 if light_level > 20000:
                     ligmsg = 'Low environmental light'
 
-            # Send the response back to the client
-            conn.sendall(response.encode('utf-8'))
 
             # Button controls (implement functionality as needed)
             if screen.displayhatmini.read_button(screen.displayhatmini.BUTTON_A):

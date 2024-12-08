@@ -1,6 +1,7 @@
 from Class.screen.minihat import Minihat
 from Class.camera import camera
 import socket
+import time
 
 screen = Minihat()
 plant_classifier = camera.PlantClassifier()
@@ -24,10 +25,13 @@ try:
         while True:
             hmdmsg = 'Low environmental humidity'
             conn.sendall(hmdmsg.encode('utf-8'))
+            print("sent")
+            time.sleep(10)
 
 except KeyboardInterrupt:
-    print("Shutting down server.")
+    print("Shutting down server...")
 finally:
+    print("End")
     for client in clients:
         client.close()
     server_socket.close()
