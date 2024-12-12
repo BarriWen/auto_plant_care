@@ -19,7 +19,7 @@ class Minihat:
         except IOError:
             self.font = ImageFont.load_default()
 
-    def display_BUTTON_A(self, temperature, humidity, light_level, moisture_level):
+    def display_BUTTON_A(self, temperature, humidity, light_level):
         # Clear the screen with a dark background
         self.draw.rectangle([0, 0, self.width, self.height], fill=(10, 10, 10))
 
@@ -35,7 +35,7 @@ class Minihat:
         self.draw_gauge(center=(40, 180), radius=40, percentage=(temperature / 100.0), color=(255, 69, 0), label="Temp", value=f"{temperature:.1f}°C")
         self.draw_gauge(center=(120, 180), radius=40, percentage=(humidity / 100.0), color=(30, 144, 255), label="Humidity", value=f"{humidity:.1f}%")
         self.draw_gauge(center=(200, 180), radius=40, percentage=(light_level / 10.0), color=(255, 215, 0), label="Light", value=light_level)
-        self.draw_gauge(center=(280, 180), radius=40, percentage=(moisture_level / 10.0), color=(34, 139, 34), label="Moisture", value=moisture_level)
+        # self.draw_gauge(center=(280, 180), radius=40, percentage=(moisture_level / 10.0), color=(34, 139, 34), label="Moisture", value=moisture_level)
 
         self.displayhatmini.display()
 

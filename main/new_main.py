@@ -15,8 +15,8 @@ humidity = 0
 light_level = 0
 
 # Plant type
-# results = plant_classifier.detect_and_classify()
-results = "golden"
+results = plant_classifier.detect_and_classify()
+# results = "golden"
 if results:
     print("Detections:", results)
 
@@ -82,6 +82,8 @@ def handle_client(conn, addr):
                     conn.sendall(hmdmsg.encode('utf-8'))
                 if humidity > 60:
                     hmdmsg = 'High environmental humidity'
+                    print("high")
+                    conn.sendall(hmdmsg.encode('utf-8'))
                 if light_level < 5000:
                     ligmsg = 'Excessive environmental light'
                 if light_level > 15000:
@@ -98,21 +100,23 @@ def handle_client(conn, addr):
                     conn.sendall(hmdmsg.encode('utf-8'))
                 if humidity > 60:
                     hmdmsg = 'High environmental humidity'
+                    print("high")
+                    conn.sendall(hmdmsg.encode('utf-8'))
                 if light_level < 10000:
                     ligmsg = 'Excessive environmental light'
                 if light_level > 20000:
                     ligmsg = 'Low environmental light'
 
             # Send response back to the client
-            conn.sendall(response.encode('utf-8'))
+            # conn.sendall(response.encode('utf-8'))
 
             # Button controls
             if screen.displayhatmini.read_button(screen.displayhatmini.BUTTON_A):
-                screen.display_BUTTON_A(temperature, humidity, light_level, 1)
+                screen.display_BUTTON_A(temperature, humidity, light_level)
             elif screen.displayhatmini.read_button(screen.displayhatmini.BUTTON_B):
                 screen.display_BUTTON_B(tmpmsg, hmdmsg, ligmsg)
             else:
-                screen.display_BUTTON_A(temperature, humidity, light_level, 1)
+                screen.display_BUTTON_A(temperature, humidity, light_level)
     except Exception as e:
         print(f"Error with client {addr}: {e}")
     finally:

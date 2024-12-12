@@ -39,7 +39,7 @@ try:
         if data == "Low environmental humidity":
             # pump on
             relay_pin = Pin(18, Pin.OUT)
-            time.sleep(3)
+            time.sleep(2)
             # pump off
             relay_pin = Pin(18, Pin.IN)
             data = ""
